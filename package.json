@@ -2,9 +2,10 @@
   "name": "dangerously-atomic-html",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/build.js",
   "scripts": {
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "build": "babel index.js --out-file build/build.js --presets=react-app"
   },
   "dependencies": {
     "lodash": "^4.17.4"
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "autoprefixer": "6.7.2",
+    "babel-cli": "^6.24.1",
     "babel-core": "6.22.1",
     "babel-eslint": "7.1.1",
     "babel-jest": "18.0.0",
