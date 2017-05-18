@@ -109,7 +109,7 @@ function visitor(domNode){
 This is useful when you want to keep all of the current attributes on a node but maybe modify one of them.
 ## Gotchas
 
-* If a dom node has an onclick attribute (or any other event) then dangerouslyAtomicHtml will throw an error. Event attributes have no meaning when going from html to react. If you suspect that the html you will be transform has event attributes in it then you will need to have a visitor function that handles those nodes.
+* If a dom node has an onclick attribute (or any other event) then dangerouslyAtomicHtml will throw an error. Event attributes have no meaning when going from html to react. If you suspect that the html you will be transforming has event attributes in it then you will need to have a visitor function that handles those nodes.
 * Try to avoid traversing a node's tree in your visitor. Each node has direct access to its parent node. For example instead of having a visitor for a table tag then checking to see if one of its rows has some property, have a visitor on the row and check to see if the parent has some property.
 
 ## Other Ideas of How to Use
