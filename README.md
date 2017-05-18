@@ -14,16 +14,16 @@ import React from 'react';
 import dangerouslyAtomicHtml from 'dangerously-atomic-html';
 
 class Example extends React.Component {
-	render(){
-  	const html = '<h1 class="title">Hello, world!</h1>';
-      return dangerouslyAtomicHtml(html);
-      /* the same as doing
-      return (
-      	<div>
-        	<h1 className="title">Hello, world</h1>
-        </div>
-      );
-      */
+  render(){
+    const html = '<h1 class="title">Hello, world!</h1>';
+    return dangerouslyAtomicHtml(html);
+    /* the same as doing
+    return (
+      <div>
+      <h1 className="title">Hello, world</h1>
+      </div>
+    );
+    */
   }
 }
 
@@ -34,9 +34,9 @@ Take note that dangerouslyAtomicHtml wraps the top in a div. This allow the tran
 dangerouslyAtomicHtml accepts a second argument which is function that is a visitor for each DOM node in the html. Those who have worked with babel or eslint plugins will be familiar with this pattern. The visitor function accepts an html node as the only argument and returns an object that describes how you want to transform that node. For example:
 ```javascript
 function visitor(domNode){
-	if(domNode.nodeName === 'H1'){ // text nodes will have a node name of `#text`
-  	return {
-    	type: 'node', // one of ['node', 'text], use node when returning anything that is not raw text.
+  if(domNode.nodeName === 'H1'){ // text nodes will have a node name of `#text`
+    return {
+      type: 'node', // one of ['node', 'text], use node when returning anything that is not raw text.
       Component: domNode.nodeName, // can be a string that is the the name of an html node or a react component,
       props: { className: 'custom-class-name' }
     }
@@ -62,17 +62,17 @@ const html = (
 );
 
 class CustomLi extends React.Component {
-	render(){
-  	// return some custom react stuff
+  render(){
+    // return some custom react stuff
   }
 }
 
 function visitor(domNode){
-	if(domNode.nodeName === 'LI'){
-  	return {
-    	type: 'node',
+  if(domNode.nodeName === 'LI'){
+    return {
+      type: 'node',
       Component: CustomLi,
-        // the props value is optional
+      // the props value is optional
     }
   }
 }
@@ -90,6 +90,23 @@ dangerouslyAtomicHtml(html, visitor);
 
 ```
 Note that if you return a react component for a node that has children then it is up to your react component to handle rendering the children via `this.props.children`.
+
+We also provided a function that will give a hash of the attributes preset on the dom node but in the react format. It takes the node as the only argument. For example:
+```javascript
+import dangerouslyAtomicHtml, { reactifyAttributes } from 'dangerously-atomic-html'
+
+function visitor(domNode){
+  if(domNode.nodeName === 'LI'){
+    return {
+      type: 'node',
+      Component: CustomLi,
+      props: reactifyAttributes(domNode)
+    }
+  }
+}
+```
+
+This is useful when you want to keep all of the current attributes on a node but maybe modify one of them.
 ## Gotchas
 
 * If a dom node has an onclick attribute (or any other event) then dangerouslyAtomicHtml will throw an error. Event attributes have no meaning when going from html to react. If you suspect that the html you will be transform has event attributes in it then you will need to have a visitor function that handles those nodes.
@@ -104,4 +121,4 @@ Note that if you return a react component for a node that has children then it i
 * Transform inline styles to react inline styles
 
 ## Contributing
-Feel free to submit pull requests and we will look at them as soon as we can. You must write tests for any new features if your pull request is to be accepted.
+Feel free to submit pull requests and we will look at them as soon as we can.
