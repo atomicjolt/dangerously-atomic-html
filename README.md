@@ -4,7 +4,7 @@
 Sometimes you can't avoid having to do dangerouslySetInnerHtml in your React apps. But, once you have dangerously set some html in react you lose all control of that part of the DOM. Dangerously Atomic Html takes html and dynamically turns it into react components at run time. This is useful for working with output from tools like tinyMCE or when looking at search results from elastic search.
 
 ## Installation
-dangerously-atomic-html has a peer dependancy of `"react": ">=14.0.0`
+dangerously-atomic-html has a peer dependency of `"react": ">=14.0.0`
 
 To install run `yard add dangerously-atomic-html`
 
@@ -15,16 +15,16 @@ import dangerouslyAtomicHtml from 'dangerously-atomic-html';
 
 class Example extends React.Component {
 	render(){
-    	const html = '<h1 class="title">Hello, world!</h1>';
-        return dangerouslyAtomicHtml(html);
-        /* the same as doing
-        return (
-        	<div>
-            	<h1 className="title">Hello, world</h1>
-            </div>
-        );
-        */
-    }
+  	const html = '<h1 class="title">Hello, world!</h1>';
+      return dangerouslyAtomicHtml(html);
+      /* the same as doing
+      return (
+      	<div>
+        	<h1 className="title">Hello, world</h1>
+        </div>
+      );
+      */
+  }
 }
 
 ```
@@ -35,12 +35,12 @@ dangerouslyAtomicHtml accepts a second argument which is function that is a visi
 ```javascript
 function visitor(domNode){
 	if(domNode.nodeName === 'H1'){ // text nodes will have a node name of `#text`
-    	return {
-        	type: 'node', // one of ['node', 'text], use node when returning anything that is not raw text.
-            Component: domNode.nodeName, // can be a string that is the the name of an html node or a react component,
-            props: { className: 'custom-class-name' }
-        }
+  	return {
+    	type: 'node', // one of ['node', 'text], use node when returning anything that is not raw text.
+      Component: domNode.nodeName, // can be a string that is the the name of an html node or a react component,
+      props: { className: 'custom-class-name' }
     }
+  }
 }
 
 dangerouslyAtomicHtml('<h1>Welcome!</h1>', visitor);
@@ -81,10 +81,10 @@ dangerouslyAtomicHtml(html, visitor);
 
 /* this would be the same as if you wrote in react
 <ul>
-	<CustomLi>Item 1</CustomLi>
-    <CustomLi>Item 2</CustomLi>
-    <CustomLi>Item 3</CustomLi>
-    <CustomLi>Item 4</CustomLi>
+  <CustomLi>Item 1</CustomLi>
+  <CustomLi>Item 2</CustomLi>
+  <CustomLi>Item 3</CustomLi>
+  <CustomLi>Item 4</CustomLi>
 </ul>
 */
 
