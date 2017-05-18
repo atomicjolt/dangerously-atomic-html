@@ -63,18 +63,18 @@ const html = (
 
 class CustomLi extends React.Component {
 	render(){
-    	// return some custom react stuff
-    }
+  	// return some custom react stuff
+  }
 }
 
 function visitor(domNode){
 	if(domNode.nodeName === 'LI'){
-    	return {
-        	type: 'node',
-            Component: CustomLi,
-            // the props value is optional
-        }
+  	return {
+    	type: 'node',
+      Component: CustomLi,
+        // the props value is optional
     }
+  }
 }
 
 dangerouslyAtomicHtml(html, visitor);
