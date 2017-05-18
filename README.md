@@ -6,7 +6,7 @@ Sometimes you can't avoid having to do dangerouslySetInnerHtml in your React app
 ## Installation
 dangerously-atomic-html has a peer dependency of `"react": ">=14.0.0`
 
-To install run `yard add dangerously-atomic-html`
+To install run `yarn add dangerously-atomic-html`
 
 ## Basic Usage
 ```javascript
