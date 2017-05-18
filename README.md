@@ -20,7 +20,7 @@ class Example extends React.Component {
     /* the same as doing
     return (
       <div>
-      <h1 className="title">Hello, world</h1>
+        <h1 className="title">Hello, world</h1>
       </div>
     );
     */
@@ -30,7 +30,7 @@ class Example extends React.Component {
 ```
 Take note that dangerouslyAtomicHtml wraps the top in a div. This allow the transformation of html that has multiple elements at the same level, for example `<div>I am a div</div><div>I am a sibling div</div>`.
 
-## Advanced usage
+## Advanced Usage
 dangerouslyAtomicHtml accepts a second argument which is function that is a visitor for each DOM node in the html. Those who have worked with babel or eslint plugins will be familiar with this pattern. The visitor function accepts an html node as the only argument and returns an object that describes how you want to transform that node. For example:
 ```javascript
 function visitor(domNode){
@@ -112,11 +112,11 @@ This is useful when you want to keep all of the current attributes on a node but
 * If a dom node has an onclick attribute (or any other event) then dangerouslyAtomicHtml will throw an error. Event attributes have no meaning when going from html to react. If you suspect that the html you will be transform has event attributes in it then you will need to have a visitor function that handles those nodes.
 * Try to avoid traversing a node's tree in your visitor. Each node has direct access to its parent node. For example instead of having a visitor for a table tag then checking to see if one of its rows has some property, have a visitor on the row and check to see if the parent has some property.
 
-## Other Ideas of how to use
+## Other Ideas of How to Use
 * Manipulating text of text nodes. Maybe you have have a comment box that uses tinyMCE and you want to add a link to another user's page when they are mentioned in a comment via @userName. You could find that in a text node and instead render a react component that links you to the users page.
 * Templating or theming user created content.
 
-## The future
+## The Future
 * Add support for aria tags
 * Transform inline styles to react inline styles
 
