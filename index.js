@@ -1,21 +1,25 @@
 import React from 'react';
 import _ from 'lodash';
 
-export default function dynamicReact(html, predicate = () => (false), key = 'dynamic_component'){
+export default function dynamicReact(html, visitorFunc = () => (false), key = 'dynamic_component'){
   const root = document.createElement('div');
   root.innerHTML = html;
-  const combinedPredicate = (node)=>{
-    const result = predicate(node);
-    if(result || result === null){ // return null to not render something for the node
+  const combinedVisitor = (node)=>{
+    const result = visitorFunc && visitorFunc(node);
+    if(visitorFunc !== null && (result || result === null)){ // return null to not render something for the node
       return result;
     }
-    return defaultPredicate(node);
+    return defaultVisitorFunc(node);
   }
-  return recursiveDynamicReact(root, combinedPredicate, key);
+  if(root.childNodes.length === 1) {
+    return recursiveDynamicReact(root.childNodes[0], combinedVisitor, key);
+  } else {
+    return _.map(root.childNodes, (childNode, index) => recursiveDynamicReact(childNode, combinedVisitor, key, 0, index));
+  }
 }
 
-function recursiveDynamicReact(node, predicate, key, level = 0, index = 0){
-  const result = predicate(node);
+function recursiveDynamicReact(node, visitorFunc, key, level = 0, index = 0){
+  const result = visitorFunc(node);
   if(!result) {
     return null;
   }
@@ -31,13 +35,13 @@ function recursiveDynamicReact(node, predicate, key, level = 0, index = 0){
 
   return (
     <Component key={`${key}_${level}_${index}`} {...result.props}>
-      {_.map(node.childNodes, (childNode, i) => recursiveDynamicReact(childNode, predicate, level + 1, i))}
+      {_.map(node.childNodes, (childNode, i) => recursiveDynamicReact(childNode, visitorFunc, level + 1, i))}
     </Component>
   );
 }
 
 const voidTags = ['IMG', 'INPUT'];
-function defaultPredicate(node){
+function defaultVisitorFunc(node){
   if (node.nodeName === '#text') {
     return {
       type: 'text',

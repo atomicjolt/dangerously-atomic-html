@@ -19,16 +19,24 @@ class Example extends React.Component {
     return dangerouslyAtomicHtml(html);
     /* the same as doing
     return (
-      <div>
-        <h1 className="title">Hello, world</h1>
-      </div>
+      <h1 className="title">Hello, world</h1>
     );
     */
   }
 }
 
 ```
-Take note that dangerouslyAtomicHtml wraps the top in a div. This allow the transformation of html that has multiple elements at the same level, for example `<div>I am a div</div><div>I am a sibling div</div>`.
+Take note that dangerouslyAtomicHtml does not wrap your html in a div or any other tag. Consider the following example:
+
+```javascript
+render(){
+  const html = '<label for="input1">Email</label><input id="input1">';
+  return dangerouslyAtomicHtml(html); // invariant violation
+  /* to correct this you need to do
+  return <some tag>{dangerouslyAtomicHtml(...)}</some tag>;
+  */
+}
+```
 
 ## Advanced Usage
 dangerouslyAtomicHtml accepts a second argument which is function that is a visitor for each DOM node in the html. Those who have worked with babel or eslint plugins will be familiar with this pattern. The visitor function accepts an html node as the only argument and returns an object that describes how you want to transform that node. For example:
@@ -37,7 +45,7 @@ function visitor(domNode){
   if(domNode.nodeName === 'H1'){ // text nodes will have a node name of `#text`
     return {
       type: 'node', // one of ['node', 'text], use node when returning anything that is not raw text.
-      Component: domNode.nodeName, // can be a string that is the the name of an html node or a react component,
+      Component: domNode.nodeName, // can be a string that is the the name of an html node, or a react component,
       props: { className: 'custom-class-name' }
     }
   }
@@ -46,7 +54,7 @@ function visitor(domNode){
 dangerouslyAtomicHtml('<h1>Welcome!</h1>', visitor);
 
 ```
-this example adds the class "custom-class-name" to all the h1 tags in the document.
+This example adds the class "custom-class-name" to all the h1 tags in the document.
 
 You can also return a react component from the visitor, for example:
 ```javascript
@@ -107,10 +115,38 @@ function visitor(domNode){
 ```
 
 This is useful when you want to keep all of the current attributes on a node but maybe modify one of them.
+
+If you are using dangerouslyAtomicHtml more than once in your app you must also provide a third argument that is the key that the component will use, for example:
+```javascript
+render(){
+  return (
+    <div>
+      {dangerouslyAtomicHtml(someHtml, someVistor, 'component1')}
+      {dangerouslyAtomicHtml(someOtherHtml, null, 'component2')}
+    </div>
+  )
+}
+```
+You must do that because the way react handles iterated components.
 ## Gotchas
 
 * If a dom node has an onclick attribute (or any other event) then dangerouslyAtomicHtml will throw an error. Event attributes have no meaning when going from html to react. If you suspect that the html you will be transforming has event attributes in it then you will need to have a visitor function that handles those nodes.
 * Try to avoid traversing a node's tree in your visitor. Each node has direct access to its parent node. For example instead of having a visitor for a table tag then checking to see if one of its rows has some property, have a visitor on the row and check to see if the parent has some property.
+* Beware trailing or leading spaces / newline chars in strings, whitespace is considered a text node in html. For example:
+```javascript
+render(){
+  const html = ' <div></div>';
+  return dangerouslyAtomicHtml(html); // invariant violation
+  /* this is same as doing
+  return [
+    ' ',
+    <div />
+  ]
+  which obviously would make react mad
+  */
+}
+```
+
 
 ## Other Ideas of How to Use
 * Manipulating text of text nodes. Maybe you have have a comment box that uses tinyMCE and you want to add a link to another user's page when they are mentioned in a comment via @userName. You could find that in a text node and instead render a react component that links you to the users page.

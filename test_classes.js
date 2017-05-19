@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import dangerouslyAtomicHtml, { reactifyAttributes } from './';
+import dangerouslyAtomicHtml, { reactifyAttributes } from './index.js';
 
 export class TestBasic extends React.Component {
   render(){
@@ -23,8 +23,7 @@ export class TestNest extends React.Component {
       </div>
     </div>
   </div>
-</div>
-`
+</div>`
   );
     return dangerouslyAtomicHtml(html);
   }
@@ -132,5 +131,12 @@ export class TestReactifyAttributesFunctionExport extends React.Component {
     }
     const html = '<div><div class="custom-class">I SHOULD BE AN H1</div></div>';
     return dangerouslyAtomicHtml(html, predicate);
+  }
+}
+
+export class TestMultiSiblingRoot extends React.Component {
+  render(){
+    const html = '<div></div><div></div>';
+    return <div>{dangerouslyAtomicHtml(html)}</div>;
   }
 }

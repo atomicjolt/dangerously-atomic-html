@@ -9,7 +9,8 @@ import {
   TestCustomComponent,
   TestCustomComponentWithChildren,
   TestCustomFunctionalComponentWithChildren,
-  TestReactifyAttributesFunctionExport
+  TestReactifyAttributesFunctionExport,
+  TestMultiSiblingRoot
 } from './test_classes';
 
 it('renders basic html', () => {
@@ -21,7 +22,7 @@ it('renders basic html', () => {
 it('renders nested html', () => {
   const result = TestUtils.renderIntoDocument(<TestNest />);
   const divs = TestUtils.scryRenderedDOMComponentsWithTag(result, 'div');
-  expect(divs.length).toBe(7); // wraps everything in a div
+  expect(divs.length).toBe(6);
 });
 
 it('sanitizes script tags', () => {
@@ -45,7 +46,7 @@ it('should not render elements where the predicate returns null', () => {
   const result = TestUtils.renderIntoDocument(<TestNullPredicate />);
   const removeMe = TestUtils.scryRenderedDOMComponentsWithClass(result, 'remove-me');
   const divs = TestUtils.scryRenderedDOMComponentsWithTag(result, 'div');
-  expect(divs.length).toBe(2);
+  expect(divs.length).toBe(1);
   expect(removeMe.length).toBe(0);
 });
 
@@ -71,4 +72,10 @@ it('lets you use the exported reactify attributes', () => {
   const result = TestUtils.renderIntoDocument(<TestReactifyAttributesFunctionExport />);
   const h1 = TestUtils.findRenderedDOMComponentWithTag(result, 'h1');
   expect(h1.className).toBe('custom-class');
+});
+
+it('renders non nested root components', () => {
+  const result = TestUtils.renderIntoDocument(<TestMultiSiblingRoot />);
+  const divs = TestUtils.scryRenderedDOMComponentsWithTag(result, 'div');
+  expect(divs.length).toBe(3);
 });
