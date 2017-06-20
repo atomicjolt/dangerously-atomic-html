@@ -140,3 +140,17 @@ export class TestMultiSiblingRoot extends React.Component {
     return <div>{dangerouslyAtomicHtml(html)}</div>;
   }
 }
+
+export class TestVoidTags extends React.Component {
+  render(){
+    const html = '<div><img /><input /><br /><area /><base /><meta /><col /><hr/><param /><link /><command /><keygen /><source /></div>';
+    return <div>{dangerouslyAtomicHtml(html)}</div>;
+  }
+}
+
+export class TestBrokenVoidTags extends React.Component {
+  render(){
+    const html = '<div><img><input><br><area><base><meta><col><hr/><param><link><command><keygen><source></div>';
+    return <div>{dangerouslyAtomicHtml(html)}</div>;
+  }
+}

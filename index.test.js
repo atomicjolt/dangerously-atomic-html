@@ -10,7 +10,9 @@ import {
   TestCustomComponentWithChildren,
   TestCustomFunctionalComponentWithChildren,
   TestReactifyAttributesFunctionExport,
-  TestMultiSiblingRoot
+  TestMultiSiblingRoot,
+  TestVoidTags,
+  TestBrokenVoidTags,
 } from './test_classes';
 
 it('renders basic html', () => {
@@ -78,4 +80,13 @@ it('renders non nested root components', () => {
   const result = TestUtils.renderIntoDocument(<TestMultiSiblingRoot />);
   const divs = TestUtils.scryRenderedDOMComponentsWithTag(result, 'div');
   expect(divs.length).toBe(3);
+});
+
+it('renders void tags correctly', () => {
+  const result = TestUtils.renderIntoDocument(<TestVoidTags />);
+  const voidTag = TestUtils.scryRenderedDOMComponentsWithTag(result, 'br');
+  expect(voidTag.length).toBe(1);
+  const otherResult = TestUtils.renderIntoDocument(<TestBrokenVoidTags />);
+  const otherVoidTag = TestUtils.scryRenderedDOMComponentsWithTag(result, 'br');
+  expect(otherVoidTag.length).toBe(1);
 });
