@@ -69,7 +69,7 @@ function recursiveDynamicReact(node, visitorFunc, key) {
   );
 }
 
-var voidTags = ['IMG', 'INPUT'];
+var voidTags = ['IMG', 'INPUT', 'BR', 'AREA', 'BASE', 'META', 'COL', 'HR', 'PARAM', 'LINK', 'COMMAND', 'KEYGEN', 'SOURCE'];
 function defaultVisitorFunc(node) {
   if (node.nodeName === '#text') {
     return {
