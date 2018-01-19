@@ -71,7 +71,17 @@ export function reactifyAttributes(node){
     if (mapAttrs[value.nodeName]){
       result[mapAttrs[value.nodeName]] = value.textContent;
     } else {
-      result[value.nodeName] = value.textContent;
+      if (value.nodeName == 'style') {
+        result.style = _(value.textContent.trim().split(';'))
+          .compact()
+          .map((key) => {
+            const parts = key.trim().split(':');
+            return { [_.camelCase(parts[0])] : parts[1].trim() };
+          }
+        ).value();
+      } else {
+        result[value.nodeName] = value.textContent;
+      }
     }
     return result;
   }, {})
