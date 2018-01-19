@@ -29,6 +29,17 @@ export class TestNest extends React.Component {
   }
 }
 
+export class TestStyle extends React.Component {
+  render(){
+    const html = (
+`<p style="font-size:12px;color:#444;-webkit-box-shadow:4px;-ms-transition:all 4s ease;">
+    Hello
+  </p>`
+  );
+    return dangerouslyAtomicHtml(html);
+  }
+}
+
 export class TestSanitize extends React.Component {
   render(){
     const html = '<div><script>console.log("Im a cross site scripting attack")</script></div>';

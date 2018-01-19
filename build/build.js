@@ -95,12 +95,30 @@ var mapAttrs = {
   for: 'htmlFor'
 };
 
+function caseKey(key) {
+  // React rules for naming inline styles:
+  // https://react-cn.github.io/react/tips/inline-styles.html
+  var newKey = _lodash2.default.camelCase(key);
+  if (key.charAt(0) == '-' && !_lodash2.default.startsWith(key, '-ms')) {
+    newKey = _lodash2.default.upperFirst(newKey);
+  }
+  return newKey;
+}
+
 function reactifyAttributes(node) {
   var attrs = _lodash2.default.reduce(node.attributes, function (result, value) {
     if (mapAttrs[value.nodeName]) {
       result[mapAttrs[value.nodeName]] = value.textContent;
     } else {
-      result[value.nodeName] = value.textContent;
+      if (value.nodeName == 'style') {
+        result.style = (0, _lodash2.default)(value.textContent.trim().split(';')).compact().reduce(function (acc, key) {
+          var parts = key.trim().split(':');
+          acc[caseKey(parts[0])] = parts[1].trim();
+          return acc;
+        }, {});
+      } else {
+        result[value.nodeName] = value.textContent;
+      }
     }
     return result;
   }, {});

@@ -66,6 +66,16 @@ const mapAttrs = {
   for: 'htmlFor',
 }
 
+function caseKey(key) {
+  // React rules for naming inline styles:
+  // https://react-cn.github.io/react/tips/inline-styles.html
+  let newKey = _.camelCase(key);
+  if (key.charAt(0) == '-' && !_.startsWith(key, '-ms')) {
+    newKey = _.upperFirst(newKey);
+  }
+  return newKey;
+}
+
 export function reactifyAttributes(node){
   const attrs = _.reduce(node.attributes, (result, value) => {
     if (mapAttrs[value.nodeName]){
@@ -74,11 +84,12 @@ export function reactifyAttributes(node){
       if (value.nodeName == 'style') {
         result.style = _(value.textContent.trim().split(';'))
           .compact()
-          .map((key) => {
+          .reduce((acc, key) => {
             const parts = key.trim().split(':');
-            return { [_.camelCase(parts[0])] : parts[1].trim() };
-          }
-        ).value();
+            acc[caseKey(parts[0])] = parts[1].trim();
+            return acc;
+          }, {}
+        );
       } else {
         result[value.nodeName] = value.textContent;
       }

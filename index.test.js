@@ -13,6 +13,7 @@ import {
   TestMultiSiblingRoot,
   TestVoidTags,
   TestBrokenVoidTags,
+  TestStyle,
 } from './test_classes';
 
 it('renders basic html', () => {
@@ -89,4 +90,12 @@ it('renders void tags correctly', () => {
   const otherResult = TestUtils.renderIntoDocument(<TestBrokenVoidTags />);
   const otherVoidTag = TestUtils.scryRenderedDOMComponentsWithTag(result, 'br');
   expect(otherVoidTag.length).toBe(1);
+});
+
+it('handles style attributes', () => {
+  const result = TestUtils.renderIntoDocument(<TestStyle />);
+  const p = TestUtils.findRenderedDOMComponentWithTag(result, 'p');
+  expect(p.style.cssText).toBe('font-size: 12px; color: rgb(68, 68, 68);');
+  expect(p.style.WebkitBoxShadow).toBe('4px');
+  expect(p.style.msTransition).toBe('all 4s ease');
 });
