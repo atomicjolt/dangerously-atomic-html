@@ -16,13 +16,25 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function getDocument() {
+  try {
+    return document;
+  } catch (e) {
+    var jsdom = require("jsdom");
+    var JSDOM = jsdom.JSDOM;
+    var _document = new JSDOM().window.document;
+
+    return _document;
+  }
+}
+
 function dynamicReact(html) {
   var visitorFunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
     return false;
   };
   var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'dynamic_component';
 
-  var root = document.createElement('div');
+  var root = getDocument().createElement('div');
   root.innerHTML = html;
   var combinedVisitor = function combinedVisitor(node) {
     var result = visitorFunc && visitorFunc(node);

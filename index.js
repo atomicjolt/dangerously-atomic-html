@@ -1,8 +1,19 @@
 import React from 'react';
 import _ from 'lodash';
 
+function getDocument() {
+  try {
+    return document;
+  } catch(e) {
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
+    const { document } = (new JSDOM()).window;
+    return document;
+  }
+}
+
 export default function dynamicReact(html, visitorFunc = () => (false), key = 'dynamic_component'){
-  const root = document.createElement('div');
+  const root = getDocument().createElement('div');
   root.innerHTML = html;
   const combinedVisitor = (node)=>{
     const result = visitorFunc && visitorFunc(node);
