@@ -1,6 +1,6 @@
 {
   "name": "dangerously-atomic-html",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "",
   "main": "build/build.js",
   "scripts": {
