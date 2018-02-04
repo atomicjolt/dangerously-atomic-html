@@ -86,7 +86,9 @@ export function reactifyAttributes(node){
           .compact()
           .reduce((acc, key) => {
             const parts = key.trim().split(':');
-            acc[caseKey(parts[0])] = parts[1].trim();
+            if(parts.length > 1) {
+              acc[caseKey(parts[0])] = parts.slice(1).join(':').trim();
+            }
             return acc;
           }, {}
         );
